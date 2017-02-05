@@ -4,9 +4,6 @@
 #include <netinet/in.h>
 #include <linux/netlink.h>
 #include <linux/rtnetlink.h>
-#include <time.h>
-
-extern char** environ;
 
 const struct sockaddr_nl IPV4_ADDRESS_CHANGES = { AF_NETLINK, 0, 0, RTMGRP_IPV4_IFADDR };
 
@@ -79,7 +76,9 @@ int is_captive_portal() {
 
 void launch_browser() {
     if(fork() == 0) { // we are the child process
-        execve("/usr/bin/xdg-open", (char *[]){ "http://amionacaptiveportal.com/nothing", NULL }, environ);
+        char *cmdline[] = { "xdg-open", "http://amionacaptiveportal.com/" , NULL };
+        execvp(cmdline[0], cmdline);
+        _exit(1);
     }
 }
 
